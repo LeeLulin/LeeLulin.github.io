@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="utf-8"?>
+<search>
+  <entry>
+    <title>在 Docker 中使用 esp-open-sdk 编译程序</title>
+    <url>/2020/10/06/docker-esp/</url>
+    <content><![CDATA[<p>Docker作为一种轻量化、可移植的容器，可以快速部署 esp-open-sdk 编译环境</p>
+<h2 id="1-下载和安装Docker"><a href="#1-下载和安装Docker" class="headerlink" title="1.下载和安装Docker"></a>1.下载和安装Docker</h2><p><a href="https://www.docker.com/products/docker-desktop" target="_blank" rel="noopener">Docker Desktop</a></p>
+<h2 id="2-修改国内镜像源"><a href="#2-修改国内镜像源" class="headerlink" title="2.修改国内镜像源"></a>2.修改国内镜像源</h2><p>点击 <code>Preferences - Docker Engin</code> <br><br><img src="/2020/10/06/docker-esp/1.png" alt="Preferences"><br><br><img src="/2020/10/06/docker-esp/2.png" alt="Docker Engin"><br><br>修改如下代码：<br></p>
+<pre><code>{
+    &quot;features&quot;: {
+    &quot;buildkit&quot;: true
+},
+&quot;experimental&quot;: false,
+&quot;registry-mirrors&quot;: [
+    &quot;https://docker.mirrors.ustc.edu.cn&quot;,
+    &quot;https://hub-mirror.c.163.com&quot;,
+    &quot;https://registry.docker-cn.com&quot;
+    ]
+}</code></pre><p>点击 <code>Apply &amp; Restart</code> 重启Docker</p>
+<h2 id="3-下载esp-open-sdk镜像"><a href="#3-下载esp-open-sdk镜像" class="headerlink" title="3.下载esp-open-sdk镜像"></a>3.下载esp-open-sdk镜像</h2><p>下载之前需要先注册 <a href="https://registry.hub.docker.com/" target="_blank" rel="noopener">Docker Hub</a> 账号并登录<br></p>
+<p>打开 <code>终端</code>  <br></p>
+<pre><code>docker pull jedie/esp-open-sdk</code></pre><p>等待镜像下载完成</p>
+<h2 id="4-启动容器"><a href="#4-启动容器" class="headerlink" title="4.启动容器"></a>4.启动容器</h2><p>在 <code>终端</code> 中<br></p>
+<p>启动一个新的容器并指定名称为esp：</p>
+<pre><code>docker run -it --name esp jedie/esp-open-sdk:latest /bin/bash</code></pre><p>启动一个已有的容器：</p>
+<pre><code>docker exec -it esp /bin/bash</code></pre><h2 id="5-将文件移动到容器中"><a href="#5-将文件移动到容器中" class="headerlink" title="5.将文件移动到容器中"></a>5.将文件移动到容器中</h2><pre><code>docker cp /Users/ryinn/esp-homekit-direct esp:/opt/</code></pre><h2 id="6-编译"><a href="#6-编译" class="headerlink" title="6.编译"></a>6.编译</h2><pre><code>docker exec -it esp /bin/bash
+
+make -C /opt/esp-homekit-direct/devices/switch all</code></pre>]]></content>
+      <categories>
+        <category>Esp8266</category>
+      </categories>
+      <tags>
+        <tag>Esp8266</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>使用 esp8266 直连 HomeKit（三）在 家庭 App 中添加 esp8266</title>
+    <url>/2020/03/16/esp-homekit-03/</url>
+    <content><![CDATA[<p>本篇介绍在 <code>家庭</code> App 中添加 <code>esp8266</code> <br></p>
+<h3 id="0-演示视频"><a href="#0-演示视频" class="headerlink" title="0 .演示视频"></a>0 .演示视频</h3><iframe height="500" width="680" src="//player.bilibili.com/player.html?aid=95271115&cid=162634840&page=1" scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true">
+</iframe>
+
+<h3 id="1-给-esp8266-配置网络"><a href="#1-给-esp8266-配置网络" class="headerlink" title="1. 给 esp8266 配置网络"></a>1. 给 esp8266 配置网络</h3><p>打开手机 wifi 搜索并连接名称为 <code>Sonoff Switch-XXXXXXX</code> 的热点<br><br>在弹出的页面中，找到自己家的 wifi 输入密码，点击 Join</p>
+<h3 id="2-家庭-App-添加-esp8266"><a href="#2-家庭-App-添加-esp8266" class="headerlink" title="2. 家庭 App 添加 esp8266"></a>2. 家庭 App 添加 esp8266</h3><h4 id="0-打开-家庭-App"><a href="#0-打开-家庭-App" class="headerlink" title="0. 打开 家庭 App"></a>0. 打开 家庭 App</h4><p>点击右上角 <code>+</code> 号选择 <code>添加或扫描配件</code><br><br><img src="/2020/03/16/esp-homekit-03/1.png" alt="1"><br></p>
+<h4 id="1-添加配件"><a href="#1-添加配件" class="headerlink" title="1. 添加配件"></a>1. 添加配件</h4><p>选择 <code>我没有或无法扫描代码</code><br><br><img src="/2020/03/16/esp-homekit-03/2.png" alt="2"><br></p>
+<h4 id="2-连接设备"><a href="#2-连接设备" class="headerlink" title="2. 连接设备"></a>2. 连接设备</h4><p>选择名称为 <code>Sonoff Switch-XXXXXXX</code> 的配件，点击 <code>仍然添加</code><br><br>输入代码 <code>11111111</code> 等待连接完成，如果失败可多试几次<br><br><img src="/2020/03/16/esp-homekit-03/3.png" alt="3"><br></p>
+<p><strong>至此，配置完成</strong></p>
+<br>
+<br>
+<br>
+<br>
+
+]]></content>
+      <categories>
+        <category>Esp8266</category>
+      </categories>
+      <tags>
+        <tag>Esp8266</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>使用 esp8266 直连 HomeKit（二）编译和烧录固件</title>
+    <url>/2020/03/15/esp-homekit-02/</url>
+    <content><![CDATA[<h2 id="写在前面"><a href="#写在前面" class="headerlink" title="写在前面"></a>写在前面</h2><p>使用 <code>esp8266</code> 直连 <code>HomeKit</code> 控制继电器，使用了两个开源项目：<br></p>
+<ol>
+<li><a href="https://github.com/RavenSystem/esp-homekit-devices" target="_blank" rel="noopener">esp-homekit-devices</a></li>
+<li><a href="https://github.com/Gruppio/Sonoff-Homekit" target="_blank" rel="noopener">Sonoff-Homekit</a></li>
+</ol>
+<p>这两个项目使用起来不方便，因此我进行了整合：<a href="https://github.com/LeeLulin/esp-homekit-direct" target="_blank" rel="noopener">esp-homekit-devices</a></p>
+<h2 id="0-下载"><a href="#0-下载" class="headerlink" title="0. 下载"></a>0. 下载</h2><pre><code>cd ~/Documents
+
+git clone --recursive https://github.com/LeeLulin/esp-homekit-direct.git</code></pre><h2 id="1-编译固件"><a href="#1-编译固件" class="headerlink" title="1. 编译固件"></a>1. 编译固件</h2><pre><code>cd esp-homekit-direct
+
+make -C devices/switch all</code></pre><p><em>注：本项目实例为 <code>esp8266-01s</code> ，如果使用其它型号，则需要修改 <code>esp-homekit-direct/devices/switch/main.c</code> 中的引脚定义：</em></p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="comment">// The GPIO pin that is connected to last pin of the programming strip of the Sonoff Basic.</span></span><br><span class="line"><span class="keyword">const</span> <span class="keyword">int</span> pin_gpio = <span class="number">14</span>;</span><br><span class="line"><span class="comment">// The GPIO pin that is connected to the relay on the Sonoff Basic.</span></span><br><span class="line"><span class="keyword">const</span> <span class="keyword">int</span> relay_gpio = <span class="number">12</span>;</span><br><span class="line"><span class="comment">// The GPIO pin that is connected to the LED on the Sonoff Basic.</span></span><br><span class="line"><span class="keyword">const</span> <span class="keyword">int</span> led_gpio = <span class="number">13</span>;</span><br><span class="line"><span class="comment">// The GPIO pin that is oconnected to the button on the Sonoff Basic.</span></span><br><span class="line"><span class="keyword">const</span> <span class="keyword">int</span> button_gpio = <span class="number">0</span>;</span><br></pre></td></tr></table></figure>
+<p>编译完成会在 <code>/devices/switch/firmware</code> 目录下生成 <code>switch.bin</code> 文件，且已存在 <code>rboot.bin</code> 和 <code>blank_config.bin</code> 两个文件</p>
+<h2 id="2-烧录固件"><a href="#2-烧录固件" class="headerlink" title="2. 烧录固件"></a>2. 烧录固件</h2><h3 id="Ubuntu"><a href="#Ubuntu" class="headerlink" title="Ubuntu"></a>Ubuntu</h3><h4 id="0-连接电脑"><a href="#0-连接电脑" class="headerlink" title="0. 连接电脑"></a>0. 连接电脑</h4><p>把 <code>esp8266-01s</code> 通过 <code>USB转串口</code> 烧录器连接到电脑<br></p>
+<p>查看端口号:</p>
+<pre><code>ls -l /dev/ttyUSB*</code></pre><p>我的是 <code>ttyUSB0</code><br></p>
+<p>修改权限:</p>
+<pre><code>sudo chmod 777 /dev/ttyUSB0</code></pre><h4 id="1-擦除-Flash"><a href="#1-擦除-Flash" class="headerlink" title="1. 擦除 Flash"></a>1. 擦除 Flash</h4><pre><code>esptool.py --port /dev/ttyUSB0 erase_flash</code></pre><h4 id="2-烧录固件-1"><a href="#2-烧录固件-1" class="headerlink" title="2. 烧录固件"></a>2. 烧录固件</h4><p>擦除 Flash 之后需要重新插拔一下 <code>esp8266-01s</code></p>
+<pre><code>cd /devices/switch/firmware
+
+esptool.py -p /dev/ttyUSB0 -b 115200 write_flash -fs 8m -fm dout -ff 40m 0x0 rboot.bin 0x1000 blank_config.bin 0x2000 switch.bin</code></pre><h3 id="Windows"><a href="#Windows" class="headerlink" title="Windows"></a>Windows</h3><h4 id="1-安装python"><a href="#1-安装python" class="headerlink" title="1. 安装python"></a>1. 安装python</h4><h4 id="2-安装esptool"><a href="#2-安装esptool" class="headerlink" title="2. 安装esptool"></a>2. 安装esptool</h4><pre><code>pip install esptool</code></pre><h4 id="3-移动固件"><a href="#3-移动固件" class="headerlink" title="3. 移动固件"></a>3. 移动固件</h4><p>把 <code>/devices/switch/firmware</code> 目录下的三个文件：<code>rboot.bin</code> <code>blank_config.bin</code> <code>switch.bin</code> 复制到python根目录下<br></p>
+<h4 id="4-清空-Flash"><a href="#4-清空-Flash" class="headerlink" title="4. 清空 Flash"></a>4. 清空 Flash</h4><pre><code>esptool.py -p [端口] earse_flash
+例：esptool.py -p COM4 earse_flash</code></pre><h4 id="5-烧录固件"><a href="#5-烧录固件" class="headerlink" title="5. 烧录固件"></a>5. 烧录固件</h4><p>Windows烧录固件有两种方式：使用 <code>ESPFlashDownLoadTool 工具</code> 或者 <code>esptool.py</code><br></p>
+<p>这里使用 <code>esptool.py</code>:</p>
+<pre><code>esptool.py -p [端口] -b 115200 write_flash -fs 1MB -fm dout -ff 40m 0x0 rboot.bin 0x1000 blank_config.bin 0x2000 switch.bin</code></pre><br>
+<br>
+<br>
+<br>]]></content>
+      <categories>
+        <category>Esp8266</category>
+      </categories>
+      <tags>
+        <tag>Esp8266</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>使用 esp8266 直连 HomeKit（一）在 Ubuntu 上搭建开发环境</title>
+    <url>/2020/03/14/esp-homekit-01/</url>
+    <content><![CDATA[<p>本篇介绍在 Ubuntu 18.04 LTS 上配置 <a href="https://github.com/pfalcon/esp-open-sdk" target="_blank" rel="noopener">esp-open-sdk</a> 开发环境</p>
+<h2 id="0-安装相关工具"><a href="#0-安装相关工具" class="headerlink" title="0. 安装相关工具"></a>0. 安装相关工具</h2><pre><code>cd ~/Downloads
+
+sudo apt-get update
+
+sudo apt-get install make unrar-free autoconf automake libtool gcc g++ gperf \ flex bison texinfo gawk ncurses-dev libexpat-dev python-dev python python-serial \ sed git unzip bash help2man wget bzip2
+
+sudo apt-get install libtool-bin
+
+sudo apt install help2man
+
+烧录工具
+pip install esptool</code></pre><h2 id="1-下载-esp-open-sdk"><a href="#1-下载-esp-open-sdk" class="headerlink" title="1. 下载 esp-open-sdk"></a>1. 下载 esp-open-sdk</h2><pre><code>git clone --recursive https://github.com/pfalcon/esp-open-sdk.git
+
+
+
+cd esp-open-sdk
+
+make toolchain esptool libhal STANDALONE=n</code></pre><p>这一步开始编译SDK，过程中需要下载诸多依赖库，会耗费相当长的时间，而且容易报错，一般情况是某几个依赖库因为网络问题下载失败导致的。<br><br>可以查看 <code>esp-open-sdk/crosstool-NG/build.log</code> 文件中的错误信息，根据错误信息下载缺失的依赖包，放在 <code>~/Downloads/esp-open-sdk/crosstool-NG/.build/tarballs</code> 目录下<br></p>
+<p>例：<code>newlib</code> 到 <a href="http://mirrors.kernel.org/sourceware/newlib" target="_blank" rel="noopener">http://mirrors.kernel.org/sourceware/newlib</a> 下载 <code>newlib-2.0.0.tar.gz</code> <br>在 <code>~/Downloads/esp-open-sdk/crosstool-NG/.build/</code> 目录下创建 <code>tarballs</code> 文件夹，将 <code>newlib-2.0.0.tar.gz</code> 放该目录下</p>
+<p><img src="/2020/03/14/esp-homekit-01/lib.png" alt="依赖库"><br></p>
+<p>编译成功后的目录：<br><br><img src="/2020/03/14/esp-homekit-01/success.png" alt="编译成功"><br></p>
+<h2 id="2-配置系统变量"><a href="#2-配置系统变量" class="headerlink" title="2. 配置系统变量"></a>2. 配置系统变量</h2><p>将 <code>eap-open-sdk</code> 移动到 <code>/opt</code> 目录下</p>
+<pre><code>cd ~/Downloads
+
+sudo mv -f esp-open-sdk /opt</code></pre><p>在系统路径中加入编译器路径</p>
+<pre><code>export PATH=$PATH:/opt/esp-open-sdk/xtensa-lx106-elf/bin</code></pre><br>
+<br>
+<br>
+<br>
+
+]]></content>
+      <categories>
+        <category>Esp8266</category>
+      </categories>
+      <tags>
+        <tag>Esp8266</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>在Ubuntu服务器上部署Hexo个人博客</title>
+    <url>/2020/03/12/hexo/</url>
+    <content><![CDATA[<p>记录一下从零开始部署Hexo博客到 Ubuntu 服务器</p>
+<h2 id="0-准备工作"><a href="#0-准备工作" class="headerlink" title="0. 准备工作"></a><strong>0. 准备工作</strong></h2><p>阿里云主机 Ubuntu Server 18.04 LTS 64位，MacOS 10.15</p>
+<h3 id="PC"><a href="#PC" class="headerlink" title="PC"></a>PC</h3><p>这里以 <code>MacOS</code> 为例<br><code>MacOS</code> 下需要安装 <code>Homebrew</code>，<code>Ubuntu</code> 则需要使用<code>apt-get</code><br></p>
+<h4 id="0-安装-Git"><a href="#0-安装-Git" class="headerlink" title="0. 安装 Git"></a>0. 安装 Git</h4><pre><code>brew install git</code></pre><h4 id="1-安装-Node-js-和-npm"><a href="#1-安装-Node-js-和-npm" class="headerlink" title="1. 安装 Node.js 和 npm"></a>1. 安装 Node.js 和 npm</h4><pre><code>brew install node</code></pre><h4 id="2-安装-Hexo"><a href="#2-安装-Hexo" class="headerlink" title="2. 安装 Hexo"></a>2. 安装 Hexo</h4><pre><code>npm install -g hexo-cli</code></pre><p>如果安装很慢，可以更换 npm 源为国内 cnpm ：</p>
+<pre><code>npm install -g cnpm --registry=https://registry.npm.taobao.org
+npm config set registry https://registry.npm.taobao.org</code></pre><h4 id="3-配置-Hexo"><a href="#3-配置-Hexo" class="headerlink" title="3. 配置 Hexo"></a>3. 配置 Hexo</h4><pre><code>cd ~
+hexo init myblog
+cd myblog
+npm install</code></pre><p>配置完成后，<code>myblog</code> 文件夹下有：<br></p>
+<ul>
+<li><p>node_modules: 依赖包</p>
+</li>
+<li><p>public：存放生成的页面</p>
+</li>
+<li><p>scaffolds：生成文章的一些模板</p>
+</li>
+<li><p>source：用来存放你的文章</p>
+</li>
+<li><p>themes：主题</p>
+</li>
+<li><p>_config.yml: 博客的配置文件<br></p>
+<pre><code>hexo g #执行后生成 `public` 文件夹
+hexo s #本地运行，http://localhost:4000，ctrl+c关闭</code></pre></li>
+</ul>
+<h3 id="服务器："><a href="#服务器：" class="headerlink" title="服务器："></a>服务器：</h3><h4 id="0-安装-Git-1"><a href="#0-安装-Git-1" class="headerlink" title="0. 安装 Git"></a>0. 安装 Git</h4><pre><code>su
+apt-get update
+apt-get install git-core</code></pre><h4 id="2-安装和配置-Nginx"><a href="#2-安装和配置-Nginx" class="headerlink" title="2. 安装和配置 Nginx"></a>2. 安装和配置 Nginx</h4><p>安装 Nginx</p>
+<pre><code>apt-get install nginx</code></pre><p>创建网站目录</p>
+<pre><code>mkdir /var/www/blog</code></pre><p>创建 Nginx 配置文件</p>
+<pre><code>vim /etc/nginx/conf.d/blog.conf
+
+server
+{
+    listen 80;
+    root /var/www/vlog;
+}</code></pre><p>修改 nginx.conf 文件</p>
+<pre><code>vim /etc/nginx/nginx.conf
+
+注释掉下面这行
+# include /etc/nginx/sites-enabled/*</code></pre><p>重新启动 Nginx 服务</p>
+<pre><code>service nginx restart</code></pre><h4 id="3-配置-Git-Hooks"><a href="#3-配置-Git-Hooks" class="headerlink" title="3. 配置 Git Hooks"></a>3. 配置 Git Hooks</h4><p>创建 Git 仓库</p>
+<pre><code>mkdir ~/blog.git &amp;&amp; cd ~/blog.git
+git init --bare</code></pre><p>配置 Hooks 脚本</p>
+<pre><code>vim ./hooks/post-receive</code></pre><p>填入如下内容：</p>
+<pre><code>#!/bin/bash
+
+rm -rf /var/www/blog
+git clone /root/blog.git /var/www/blog</code></pre><p>赋予脚本执行权限：</p>
+<pre><code>chmod +x ./hooks/post-receive</code></pre><h2 id="1-部署Hexo到服务器"><a href="#1-部署Hexo到服务器" class="headerlink" title="1. 部署Hexo到服务器"></a><strong>1. 部署Hexo到服务器</strong></h2><h3 id="PC-1"><a href="#PC-1" class="headerlink" title="PC"></a>PC</h3><h4 id="0-修改-config-yml"><a href="#0-修改-config-yml" class="headerlink" title="0. 修改 _config.yml"></a>0. 修改 _config.yml</h4><p>文件最底下</p>
+<pre><code>eploy:
+    type: git
+    repo: 
+        self: root@服务器IP地址:blog.git
+    branch: master</code></pre><h4 id="1-同步网站到服务器"><a href="#1-同步网站到服务器" class="headerlink" title="1. 同步网站到服务器"></a>1. 同步网站到服务器</h4><pre><code>hexo g &amp;&amp; hexo d</code></pre><p><strong>通过 <code>http://服务器IP地址</code> 访问博客</strong><br><br><br><br><br><br><br><br></p>
+]]></content>
+      <categories>
+        <category>Hexo</category>
+      </categories>
+      <tags>
+        <tag>Hexo</tag>
+      </tags>
+  </entry>
+</search>
